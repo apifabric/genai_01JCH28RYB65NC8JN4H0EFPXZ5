@@ -1,0 +1,504 @@
+about:
+  date: November 12, 2024 20:51:31
+  recent_changes: works with modified safrs-react-admin
+  version: 0.0.0
+api_root: '{http_type}://{swagger_host}:{port}/{api}'
+authentication: '{system-default}'
+entities:
+  Appointment:
+    columns:
+    - label: ' id*'
+      name: id
+      search: true
+      sort: true
+      template: integer
+      type: INTEGER
+    - name: pet_id
+      template: integer
+      type: INTEGER
+    - name: service_type
+      template: text
+      type: VARCHAR
+    - name: date
+      type: DATETIME
+    description: Table to store appointment details for pet services.
+    detail_template: detail_template.html
+    exclude: 'false'
+    favorite: id
+    home_template: home_template.html
+    info_list: Table to store appointment details for pet services.
+    label: Appointment
+    mode: tab
+    new_template: new_template.html
+    primary_key:
+    - id
+    tab_groups:
+    - direction: toone
+      fks:
+      - pet_id
+      name: pet
+      resource: Pet
+    type: Appointment
+  Customer:
+    columns:
+    - label: ' name*'
+      name: name
+      required: true
+      search: true
+      sort: true
+      template: text
+      type: VARCHAR
+    - name: email
+      template: text
+      type: VARCHAR
+    - name: phone
+      template: text
+      type: VARCHAR
+    - name: total_pets
+      template: integer
+      type: INTEGER
+    - name: total_spent
+      template: integer
+      type: INTEGER
+    - name: id
+      template: integer
+      type: INTEGER
+    description: Table to store customer details.
+    detail_template: detail_template.html
+    exclude: 'false'
+    favorite: name
+    home_template: home_template.html
+    info_list: Table to store customer details.
+    label: Customer
+    mode: tab
+    new_template: new_template.html
+    primary_key:
+    - id
+    tab_groups:
+    - direction: tomany
+      fks:
+      - customer_id
+      name: OrderList
+      resource: Order
+    - direction: tomany
+      fks:
+      - customer_id
+      name: PetList
+      resource: Pet
+    type: Customer
+  Employee:
+    columns:
+    - label: ' name*'
+      name: name
+      required: true
+      search: true
+      sort: true
+      template: text
+      type: VARCHAR
+    - name: position
+      template: text
+      type: VARCHAR
+    - name: id
+      template: integer
+      type: INTEGER
+    - name: total_hours_worked
+      template: integer
+      type: INTEGER
+    description: Table to store employee details.
+    detail_template: detail_template.html
+    exclude: 'false'
+    favorite: name
+    home_template: home_template.html
+    info_list: Table to store employee details.
+    label: Employee
+    mode: tab
+    new_template: new_template.html
+    primary_key:
+    - id
+    tab_groups:
+    - direction: tomany
+      fks:
+      - employee_id
+      name: ShiftList
+      resource: Shift
+    type: Employee
+  Order:
+    columns:
+    - label: ' id*'
+      name: id
+      search: true
+      sort: true
+      template: integer
+      type: INTEGER
+    - name: customer_id
+      template: integer
+      type: INTEGER
+    - name: order_date
+      required: true
+      type: DATETIME
+    - name: total_amount
+      template: integer
+      type: INTEGER
+    description: Table to store order details.
+    detail_template: detail_template.html
+    exclude: 'false'
+    favorite: id
+    home_template: home_template.html
+    info_list: Table to store order details.
+    label: Order
+    mode: tab
+    new_template: new_template.html
+    primary_key:
+    - id
+    tab_groups:
+    - direction: tomany
+      fks:
+      - order_id
+      name: OrderItemList
+      resource: OrderItem
+    - direction: toone
+      fks:
+      - customer_id
+      name: customer
+      resource: Customer
+    type: Order
+  OrderItem:
+    columns:
+    - label: ' id*'
+      name: id
+      search: true
+      sort: true
+      template: integer
+      type: INTEGER
+    - name: order_id
+      template: integer
+      type: INTEGER
+    - name: product_id
+      template: integer
+      type: INTEGER
+    - name: quantity
+      required: true
+      template: integer
+      type: INTEGER
+    - name: item_total
+      template: integer
+      type: INTEGER
+    description: Table to store details of order items.
+    detail_template: detail_template.html
+    exclude: 'false'
+    favorite: id
+    home_template: home_template.html
+    info_list: Table to store details of order items.
+    label: OrderItem
+    mode: tab
+    new_template: new_template.html
+    primary_key:
+    - id
+    tab_groups:
+    - direction: toone
+      fks:
+      - order_id
+      name: order
+      resource: Order
+    - direction: toone
+      fks:
+      - product_id
+      name: product
+      resource: Product
+    type: OrderItem
+  Pet:
+    columns:
+    - label: ' name*'
+      name: name
+      required: true
+      search: true
+      sort: true
+      template: text
+      type: VARCHAR
+    - name: customer_id
+      template: integer
+      type: INTEGER
+    - name: species
+      template: text
+      type: VARCHAR
+    - name: date_of_birth
+      type: DATE
+    - name: id
+      template: integer
+      type: INTEGER
+    - name: breed
+      template: text
+      type: VARCHAR
+    description: Table to store pet details.
+    detail_template: detail_template.html
+    exclude: 'false'
+    favorite: name
+    home_template: home_template.html
+    info_list: Table to store pet details.
+    label: Pet
+    mode: tab
+    new_template: new_template.html
+    primary_key:
+    - id
+    tab_groups:
+    - direction: tomany
+      fks:
+      - pet_id
+      name: AppointmentList
+      resource: Appointment
+    - direction: tomany
+      fks:
+      - pet_id
+      name: PetServiceList
+      resource: PetService
+    - direction: toone
+      fks:
+      - customer_id
+      name: customer
+      resource: Customer
+    type: Pet
+  PetService:
+    columns:
+    - label: ' id*'
+      name: id
+      search: true
+      sort: true
+      template: integer
+      type: INTEGER
+    - name: pet_id
+      template: integer
+      type: INTEGER
+    - name: service_id
+      template: integer
+      type: INTEGER
+    - name: appointment_date
+      type: DATETIME
+    description: Intermediate table to link services provided to pets.
+    detail_template: detail_template.html
+    exclude: 'false'
+    favorite: id
+    home_template: home_template.html
+    info_list: Intermediate table to link services provided to pets.
+    label: PetService
+    mode: tab
+    new_template: new_template.html
+    primary_key:
+    - id
+    tab_groups:
+    - direction: toone
+      fks:
+      - pet_id
+      name: pet
+      resource: Pet
+    - direction: toone
+      fks:
+      - service_id
+      name: service
+      resource: Service
+    type: PetService
+  Product:
+    columns:
+    - label: ' name*'
+      name: name
+      required: true
+      search: true
+      sort: true
+      template: text
+      type: VARCHAR
+    - name: price
+      template: integer
+      type: INTEGER
+    - name: stock_quantity
+      template: integer
+      type: INTEGER
+    - name: id
+      template: integer
+      type: INTEGER
+    description: Table to store product details.
+    detail_template: detail_template.html
+    exclude: 'false'
+    favorite: name
+    home_template: home_template.html
+    info_list: Table to store product details.
+    label: Product
+    mode: tab
+    new_template: new_template.html
+    primary_key:
+    - id
+    tab_groups:
+    - direction: tomany
+      fks:
+      - product_id
+      name: OrderItemList
+      resource: OrderItem
+    - direction: tomany
+      fks:
+      - product_id
+      name: ProductSupplyList
+      resource: ProductSupply
+    type: Product
+  ProductSupply:
+    columns:
+    - label: ' id*'
+      name: id
+      search: true
+      sort: true
+      template: integer
+      type: INTEGER
+    - name: product_id
+      template: integer
+      type: INTEGER
+    - name: supplier_id
+      template: integer
+      type: INTEGER
+    description: Intermediate table to link products with suppliers.
+    detail_template: detail_template.html
+    exclude: 'false'
+    favorite: id
+    home_template: home_template.html
+    info_list: Intermediate table to link products with suppliers.
+    label: ProductSupply
+    mode: tab
+    new_template: new_template.html
+    primary_key:
+    - id
+    tab_groups:
+    - direction: toone
+      fks:
+      - product_id
+      name: product
+      resource: Product
+    - direction: toone
+      fks:
+      - supplier_id
+      name: supplier
+      resource: Supplier
+    type: ProductSupply
+  Service:
+    columns:
+    - label: ' name*'
+      name: name
+      required: true
+      search: true
+      sort: true
+      template: text
+      type: VARCHAR
+    - name: price
+      template: integer
+      type: INTEGER
+    - name: id
+      template: integer
+      type: INTEGER
+    description: Table to represent various services offered for pets.
+    detail_template: detail_template.html
+    exclude: 'false'
+    favorite: name
+    home_template: home_template.html
+    info_list: Table to represent various services offered for pets.
+    label: Service
+    mode: tab
+    new_template: new_template.html
+    primary_key:
+    - id
+    tab_groups:
+    - direction: tomany
+      fks:
+      - service_id
+      name: PetServiceList
+      resource: PetService
+    type: Service
+  Shift:
+    columns:
+    - label: ' id*'
+      name: id
+      search: true
+      sort: true
+      template: integer
+      type: INTEGER
+    - name: employee_id
+      template: integer
+      type: INTEGER
+    - name: start_time
+      type: DATETIME
+    - name: end_time
+      type: DATETIME
+    description: Table to store shift details for employees.
+    detail_template: detail_template.html
+    exclude: 'false'
+    favorite: id
+    home_template: home_template.html
+    info_list: Table to store shift details for employees.
+    label: Shift
+    mode: tab
+    new_template: new_template.html
+    primary_key:
+    - id
+    tab_groups:
+    - direction: toone
+      fks:
+      - employee_id
+      name: employee
+      resource: Employee
+    type: Shift
+  Supplier:
+    columns:
+    - label: ' name*'
+      name: name
+      required: true
+      search: true
+      sort: true
+      template: text
+      type: VARCHAR
+    - name: contact_email
+      template: text
+      type: VARCHAR
+    - name: id
+      template: integer
+      type: INTEGER
+    description: Table to store supplier details for products.
+    detail_template: detail_template.html
+    exclude: 'false'
+    favorite: name
+    home_template: home_template.html
+    info_list: Table to store supplier details for products.
+    label: Supplier
+    mode: tab
+    new_template: new_template.html
+    primary_key:
+    - id
+    tab_groups:
+    - direction: tomany
+      fks:
+      - supplier_id
+      name: ProductSupplyList
+      resource: ProductSupply
+    type: Supplier
+settings:
+  HomeJS: /admin-app/home.js
+  max_list_columns: 8
+  style_guide:
+    applicationLocales:
+    - en
+    - es
+    currency_symbol: $
+    currency_symbol_position: left
+    date_format: LL
+    decimal_max: '1000000000'
+    decimal_min: '0'
+    decimal_separator: .
+    edit_on_mode: dblclick
+    exclude_listpicker: false
+    include_translation: false
+    keycloak_client_id: alsclient
+    keycloak_realm: kcals
+    keycloak_url: http://localhost:8080
+    locale: en
+    max_decimal_digits: '4'
+    min_decimal_digits: '2'
+    mode: tab
+    pick_style: list
+    serviceType: OntimizeEE
+    startSessionPath: /auth/login
+    style: light
+    thousand_separator: ','
+    use_keycloak: false

@@ -1,0 +1,82 @@
+<div class="container">
+<o-form-container breadcrumb="yes" breadcrumb-label-columns="name" breadcrumb-separator=", " class="fill-form">
+      <o-form #form attr="Employee_form_edit" 
+        service="Employee" 
+        entity="Employee" 
+        fxLayout="column" 
+        show-header="yes" 
+        header-actions="R;I;U;D"
+        #oDetailForm keys="id" 
+        keys-sql-types="INTEGER" 
+        show-header-navigation="yes"
+        (onDataLoaded)="onDataLoaded($event)">
+
+  <o-row attr="row1" layout-align="start stretch">
+    <div fxLayout="row wrap" fxLayoutAlign="start start" fxFlex fxLayoutGap="14px">
+      
+      <o-text-input #name attr="name" label=" name*" enabled="yes" required="yes" fxFlex="20%" class="form-field"></o-text-input>
+      
+      <o-text-input #position attr="position" label="position" enabled="yes" required="no" fxFlex="20%" class="form-field"></o-text-input>
+      
+      <o-integer-input #id attr="id" label="id" type="integer" editable="no" required="no" ></o-integer-input>
+      
+      <o-integer-input #total_hours_worked attr="total_hours_worked" label="total_hours_worked" type="integer" editable="no" required="no" ></o-integer-input>
+      
+    </div>
+  </o-row>
+      
+      <mat-tab-group fxFill>
+        
+        <mat-tab label="SHIFT-employee_id">
+    <div layout-padding>
+      <o-table 
+        attr="ShiftTable" 
+        service="Shift" 
+        entity="Shift" 
+        keys="id"
+        parent-keys="employee_id:id"
+        columns="id;employee_id;start_time;end_time"  
+        horizontal-scroll="yes"
+        detail-form-route="Shift" 
+        edit-form-route="Shift"
+        visible-columns="id;employee_id;start_time;end_time"  
+        sort-columns="id" 
+        query-rows="25" 
+        quick-filter="yes"
+        row-height="medium" 
+        select-all-checkbox="true" 
+        pageable="yes"  
+        auto-adjust="true" 
+        virtual-scroll="yes" 
+        insert-button="yes" 
+        delete-button="yes" 
+        fixed-header="true" 
+        class="vertical-padding-8"
+        edition-mode="dblclick" 
+        horizontal-scroll="yes" class="fill-form">
+        
+          <o-table-column #id attr="id" title=" id*" type="integer" editable="no" required="no" content-align="center"></o-table-column>
+        
+          <o-table-column attr="employee_id" title="employee_id">
+    <o-table-cell-renderer-service attr="employee_id" 
+        service="Employee" entity="EmployeeType" columns="id;name"
+        parent-keys="id:employee_id"
+        value-column="name" keys="employee_id"
+        visible-columns="name" separator=" - " width="680px">
+    </o-table-cell-renderer-service>
+</o-table-column>
+        
+          <o-table-column #start_time attr="start_time" title="start_time" editable="no" required="no" content-align="left"></o-table-column>
+        
+          <o-table-column #end_time attr="end_time" title="end_time" editable="no" required="no" content-align="left"></o-table-column>
+        
+        <o-table-paginator page-size-options="25;50;100"></o-table-paginator>
+      </o-table>
+    </div>
+</mat-tab>
+        
+      </mat-tab-group>
+      
+    </o-form>
+  </o-form-container>
+</div>

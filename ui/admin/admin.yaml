@@ -1,0 +1,326 @@
+about:
+  date: November 12, 2024 20:51:31
+  recent_changes: works with modified safrs-react-admin
+  version: 0.0.0
+api_root: '{http_type}://{swagger_host}:{port}/{api}'
+authentication: '{system-default}'
+info:
+  number_relationships: 10
+  number_tables: 12
+info_toggle_checked: true
+resources:
+  Appointment:
+    attributes:
+    - label: ' id*'
+      name: id
+      search: true
+      sort: true
+    - name: pet_id
+    - name: service_type
+    - name: date
+      type: DATETIME
+    description: Table to store appointment details for pet services.
+    info_list: Table to store appointment details for pet services.
+    tab_groups:
+    - direction: toone
+      fks:
+      - pet_id
+      name: pet
+      resource: Pet
+    type: Appointment
+    user_key: id
+  Customer:
+    attributes:
+    - label: ' name*'
+      name: name
+      required: true
+      search: true
+      sort: true
+    - name: email
+    - name: phone
+    - name: total_pets
+    - name: total_spent
+    - name: id
+    description: Table to store customer details.
+    info_list: Table to store customer details.
+    tab_groups:
+    - direction: tomany
+      fks:
+      - customer_id
+      name: OrderList
+      resource: Order
+    - direction: tomany
+      fks:
+      - customer_id
+      name: PetList
+      resource: Pet
+    type: Customer
+    user_key: name
+  Employee:
+    attributes:
+    - label: ' name*'
+      name: name
+      required: true
+      search: true
+      sort: true
+    - name: position
+    - name: id
+    - name: total_hours_worked
+    description: Table to store employee details.
+    info_list: Table to store employee details.
+    tab_groups:
+    - direction: tomany
+      fks:
+      - employee_id
+      name: ShiftList
+      resource: Shift
+    type: Employee
+    user_key: name
+  Order:
+    attributes:
+    - label: ' id*'
+      name: id
+      search: true
+      sort: true
+    - name: customer_id
+    - name: order_date
+      required: true
+      type: DATETIME
+    - name: total_amount
+    description: Table to store order details.
+    info_list: Table to store order details.
+    tab_groups:
+    - direction: tomany
+      fks:
+      - order_id
+      name: OrderItemList
+      resource: OrderItem
+    - direction: toone
+      fks:
+      - customer_id
+      name: customer
+      resource: Customer
+    type: Order
+    user_key: id
+  OrderItem:
+    attributes:
+    - label: ' id*'
+      name: id
+      search: true
+      sort: true
+    - name: order_id
+    - name: product_id
+    - name: quantity
+      required: true
+    - name: item_total
+    description: Table to store details of order items.
+    info_list: Table to store details of order items.
+    tab_groups:
+    - direction: toone
+      fks:
+      - order_id
+      name: order
+      resource: Order
+    - direction: toone
+      fks:
+      - product_id
+      name: product
+      resource: Product
+    type: OrderItem
+    user_key: id
+  Pet:
+    attributes:
+    - label: ' name*'
+      name: name
+      required: true
+      search: true
+      sort: true
+    - name: customer_id
+    - name: species
+    - name: date_of_birth
+      type: DATE
+    - name: id
+    - name: breed
+    description: Table to store pet details.
+    info_list: Table to store pet details.
+    tab_groups:
+    - direction: tomany
+      fks:
+      - pet_id
+      name: AppointmentList
+      resource: Appointment
+    - direction: tomany
+      fks:
+      - pet_id
+      name: PetServiceList
+      resource: PetService
+    - direction: toone
+      fks:
+      - customer_id
+      name: customer
+      resource: Customer
+    type: Pet
+    user_key: name
+  PetService:
+    attributes:
+    - label: ' id*'
+      name: id
+      search: true
+      sort: true
+    - name: pet_id
+    - name: service_id
+    - name: appointment_date
+      type: DATETIME
+    description: Intermediate table to link services provided to pets.
+    info_list: Intermediate table to link services provided to pets.
+    tab_groups:
+    - direction: toone
+      fks:
+      - pet_id
+      name: pet
+      resource: Pet
+    - direction: toone
+      fks:
+      - service_id
+      name: service
+      resource: Service
+    type: PetService
+    user_key: id
+  Product:
+    attributes:
+    - label: ' name*'
+      name: name
+      required: true
+      search: true
+      sort: true
+    - name: price
+    - name: stock_quantity
+    - name: id
+    description: Table to store product details.
+    info_list: Table to store product details.
+    tab_groups:
+    - direction: tomany
+      fks:
+      - product_id
+      name: OrderItemList
+      resource: OrderItem
+    - direction: tomany
+      fks:
+      - product_id
+      name: ProductSupplyList
+      resource: ProductSupply
+    type: Product
+    user_key: name
+  ProductSupply:
+    attributes:
+    - label: ' id*'
+      name: id
+      search: true
+      sort: true
+    - name: product_id
+    - name: supplier_id
+    description: Intermediate table to link products with suppliers.
+    info_list: Intermediate table to link products with suppliers.
+    tab_groups:
+    - direction: toone
+      fks:
+      - product_id
+      name: product
+      resource: Product
+    - direction: toone
+      fks:
+      - supplier_id
+      name: supplier
+      resource: Supplier
+    type: ProductSupply
+    user_key: id
+  Service:
+    attributes:
+    - label: ' name*'
+      name: name
+      required: true
+      search: true
+      sort: true
+    - name: price
+    - name: id
+    description: Table to represent various services offered for pets.
+    info_list: Table to represent various services offered for pets.
+    tab_groups:
+    - direction: tomany
+      fks:
+      - service_id
+      name: PetServiceList
+      resource: PetService
+    type: Service
+    user_key: name
+  Shift:
+    attributes:
+    - label: ' id*'
+      name: id
+      search: true
+      sort: true
+    - name: employee_id
+    - name: start_time
+      type: DATETIME
+    - name: end_time
+      type: DATETIME
+    description: Table to store shift details for employees.
+    info_list: Table to store shift details for employees.
+    tab_groups:
+    - direction: toone
+      fks:
+      - employee_id
+      name: employee
+      resource: Employee
+    type: Shift
+    user_key: id
+  Supplier:
+    attributes:
+    - label: ' name*'
+      name: name
+      required: true
+      search: true
+      sort: true
+    - name: contact_email
+    - name: id
+    description: Table to store supplier details for products.
+    info_list: Table to store supplier details for products.
+    tab_groups:
+    - direction: tomany
+      fks:
+      - supplier_id
+      name: ProductSupplyList
+      resource: ProductSupply
+    type: Supplier
+    user_key: name
+settings:
+  HomeJS: /admin-app/home.js
+  max_list_columns: 8
+  style_guide:
+    applicationLocales:
+    - en
+    - es
+    currency_symbol: $
+    currency_symbol_position: left
+    date_format: LL
+    decimal_max: '1000000000'
+    decimal_min: '0'
+    decimal_separator: .
+    detail_mode: tab
+    edit_on_mode: dblclick
+    exclude_listpicker: false
+    include_translation: 'false'
+    keycloak_client_id: alsclient
+    keycloak_realm: kcals
+    keycloak_url: http://localhost:8080
+    locale: en
+    max_decimal_digits: '4'
+    min_decimal_digits: '2'
+    new_mode: dialog
+    pick_style: list
+    row_height: small,
+    serviceType: OntimizeEE
+    startSessionPath: /auth/login
+    style: light
+    thousand_separator: ','
+    use_keycloak: 'false'

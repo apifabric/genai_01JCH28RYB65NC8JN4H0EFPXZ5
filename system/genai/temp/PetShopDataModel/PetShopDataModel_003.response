@@ -1,0 +1,104 @@
+{
+    "models": [
+        {
+            "classname": "Customer",
+            "code": "class Customer(Base):\n    \"\"\"description: Table to store customer details.\"\"\"\n    __tablename__ = 'customer'\n\n    id = Column(Integer, primary_key=True, autoincrement=True)\n    name = Column(String, nullable=False)\n    email = Column(String)\n    phone = Column(String)\n\n    # Derived Attributes\n    total_pets = Column(Integer)\n    total_spent = Column(Integer)",
+            "description": "Table to store customer details.",
+            "name": "Customer"
+        },
+        {
+            "classname": "Pet",
+            "code": "class Pet(Base):\n    \"\"\"description: Table to store pet details.\"\"\"\n    __tablename__ = 'pet'\n\n    id = Column(Integer, primary_key=True, autoincrement=True)\n    name = Column(String, nullable=False)\n    species = Column(String)\n    breed = Column(String)\n    date_of_birth = Column(Date)\n    customer_id = Column(Integer, ForeignKey('customer.id'))",
+            "description": "Table to store pet details.",
+            "name": "Pet"
+        },
+        {
+            "classname": "Product",
+            "code": "class Product(Base):\n    \"\"\"description: Table to store product details.\"\"\"\n    __tablename__ = 'product'\n\n    id = Column(Integer, primary_key=True, autoincrement=True)\n    name = Column(String, nullable=False)\n    price = Column(Integer)\n    stock_quantity = Column(Integer)",
+            "description": "Table to store product details.",
+            "name": "Product"
+        },
+        {
+            "classname": "Order",
+            "code": "class Order(Base):\n    \"\"\"description: Table to store order details.\"\"\"\n    __tablename__ = 'order'\n\n    id = Column(Integer, primary_key=True, autoincrement=True)\n    order_date = Column(DateTime, nullable=False)\n    customer_id = Column(Integer, ForeignKey('customer.id'))\n\n    # Derived Attribute\n    total_amount = Column(Integer)",
+            "description": "Table to store order details.",
+            "name": "Order"
+        },
+        {
+            "classname": "OrderItem",
+            "code": "class OrderItem(Base):\n    \"\"\"description: Table to store details of order items.\"\"\"\n    __tablename__ = 'order_item'\n\n    id = Column(Integer, primary_key=True, autoincrement=True)\n    order_id = Column(Integer, ForeignKey('order.id'))\n    product_id = Column(Integer, ForeignKey('product.id'))\n    quantity = Column(Integer, nullable=False)\n\n    # Derived Attribute\n    item_total = Column(Integer)",
+            "description": "Table to store details of order items.",
+            "name": "OrderItem"
+        },
+        {
+            "classname": "Appointment",
+            "code": "class Appointment(Base):\n    \"\"\"description: Table to store appointment details for pet services.\"\"\"\n    __tablename__ = 'appointment'\n\n    id = Column(Integer, primary_key=True, autoincrement=True)\n    pet_id = Column(Integer, ForeignKey('pet.id'))\n    service_type = Column(String)\n    date = Column(DateTime)",
+            "description": "Table to store appointment details for pet services.",
+            "name": "Appointment"
+        },
+        {
+            "classname": "Service",
+            "code": "class Service(Base):\n    \"\"\"description: Table to represent various services offered for pets.\"\"\"\n    __tablename__ = 'service'\n\n    id = Column(Integer, primary_key=True, autoincrement=True)\n    name = Column(String, nullable=False)\n    price = Column(Integer)",
+            "description": "Table to represent various services offered for pets.",
+            "name": "Service"
+        },
+        {
+            "classname": "PetService",
+            "code": "class PetService(Base):\n    \"\"\"description: Intermediate table to link services provided to pets.\"\"\"\n    __tablename__ = 'pet_service'\n\n    id = Column(Integer, primary_key=True, autoincrement=True)\n    pet_id = Column(Integer, ForeignKey('pet.id'))\n    service_id = Column(Integer, ForeignKey('service.id'))\n    appointment_date = Column(DateTime)",
+            "description": "Intermediate table to link services provided to pets.",
+            "name": "PetService"
+        },
+        {
+            "classname": "Supplier",
+            "code": "class Supplier(Base):\n    \"\"\"description: Table to store supplier details for products.\"\"\"\n    __tablename__ = 'supplier'\n\n    id = Column(Integer, primary_key=True, autoincrement=True)\n    name = Column(String, nullable=False)\n    contact_email = Column(String)",
+            "description": "Table to store supplier details for products.",
+            "name": "Supplier"
+        },
+        {
+            "classname": "ProductSupply",
+            "code": "class ProductSupply(Base):\n    \"\"\"description: Intermediate table to link products with suppliers.\"\"\"\n    __tablename__ = 'product_supply'\n\n    id = Column(Integer, primary_key=True, autoincrement=True)\n    product_id = Column(Integer, ForeignKey('product.id'))\n    supplier_id = Column(Integer, ForeignKey('supplier.id'))",
+            "description": "Intermediate table to link products with suppliers.",
+            "name": "ProductSupply"
+        },
+        {
+            "classname": "Employee",
+            "code": "class Employee(Base):\n    \"\"\"description: Table to store employee details.\"\"\"\n    __tablename__ = 'employee'\n\n    id = Column(Integer, primary_key=True, autoincrement=True)\n    name = Column(String, nullable=False)\n    position = Column(String)\n\n    # Derived Attribute\n    total_hours_worked = Column(Integer)",
+            "description": "Table to store employee details.",
+            "name": "Employee"
+        },
+        {
+            "classname": "Shift",
+            "code": "class Shift(Base):\n    \"\"\"description: Table to store shift details for employees.\"\"\"\n    __tablename__ = 'shift'\n\n    id = Column(Integer, primary_key=True, autoincrement=True)\n    employee_id = Column(Integer, ForeignKey('employee.id'))\n    start_time = Column(DateTime)\n    end_time = Column(DateTime)",
+            "description": "Table to store shift details for employees.",
+            "name": "Shift"
+        }
+    ],
+    "rules": [
+        {
+            "name": "sum_total_spent",
+            "description": "Derive Customer.total_spent as the sum of Order.total_amount for each customer.",
+            "use_case": "To track the total amount each customer has spent.",
+            "code": "Rule.sum(derive=Customer.total_spent, as_sum_of=Order.total_amount, where=None)"
+        },
+        {
+            "name": "sum_total_pets",
+            "description": "Derive Customer.total_pets as the count of pets owned by the customer.",
+            "use_case": "To maintain a count of all pets owned by the customer.",
+            "code": "Rule.count(derive=Customer.total_pets, as_count_of=Pet, where=None)"
+        },
+        {
+            "name": "formula_item_total",
+            "description": "Derive OrderItem.item_total as the product of quantity and product price.",
+            "use_case": "To calculate the total amount for each item in the order.",
+            "code": "Rule.formula(derive=OrderItem.item_total, as_expression=lambda row: row.quantity * row.product.price)"
+        },
+        {
+            "name": "sum_order_total_amount",
+            "description": "Derive Order.total_amount as the sum of all OrderItem.item_total for each order.",
+            "use_case": "To calculate the total amount of an entire order.",
+            "code": "Rule.sum(derive=Order.total_amount, as_sum_of=OrderItem.item_total, where=None)"
+        }
+    ],
+    "test_data": "from datetime import date, datetime\n\n# Test Data for Customer\ncustomer_1 = Customer(id=1, name='John Doe', email='johndoe@example.com', phone='123-456-7890', total_pets=2, total_spent=500)\ncustomer_2 = Customer(id=2, name='Jane Smith', email='janesmith@example.com', phone='987-654-3210', total_pets=1, total_spent=150)\ncustomer_3 = Customer(id=3, name='Tom Brown', email='tombrown@example.com', phone='555-666-7777', total_pets=0, total_spent=0)\ncustomer_4 = Customer(id=4, name='Alice White', email='alicewhite@example.com', phone='222-333-4444', total_pets=3, total_spent=300)\n\n# Test Data for Pet\npet_1 = Pet(id=1, name='Buddy', species='Dog', breed='Labrador', date_of_birth=date(2020, 6, 15), customer_id=1)\npet_2 = Pet(id=2, name='Whiskers', species='Cat', breed='Maine Coon', date_of_birth=date(2019, 8, 12), customer_id=2)\npet_3 = Pet(id=3, name='Goldie', species='Fish', breed='Goldfish', date_of_birth=date(2021, 4, 25), customer_id=1)\npet_4 = Pet(id=4, name='Rex', species='Dog', breed='German Shepherd', date_of_birth=date(2018, 5, 30), customer_id=4)\n\n# Test Data for Product\nproduct_1 = Product(id=1, name='Dog Food', price=20, stock_quantity=100)\nproduct_2 = Product(id=2, name='Cat Toy', price=15, stock_quantity=50)\nproduct_3 = Product(id=3, name='Fish Tank', price=100, stock_quantity=20)\nproduct_4 = Product(id=4, name='Dog Leash', price=10, stock_quantity=150)\n\n# Test Data for Order\norder_1 = Order(id=1, order_date=datetime(2023, 5, 20, 10, 30), customer_id=1, total_amount=100)\norder_2 = Order(id=2, order_date=datetime(2023, 6, 15, 14, 45), customer_id=1, total_amount=400)\norder_3 = Order(id=3, order_date=datetime(2023, 5, 12, 9, 15), customer_id=2, total_amount=150)\norder_4 = Order(id=4, order_date=datetime(2023, 6, 22, 11, 10), customer_id=4, total_amount=300)\n\n# Test Data for OrderItem\norder_item_1 = OrderItem(id=1, order_id=1, product_id=1, quantity=4, item_total=80)\norder_item_2 = OrderItem(id=2, order_id=1, product_id=4, quantity=2, item_total=20)\norder_item_3 = OrderItem(id=3, order_id=2, product_id=3, quantity=4, item_total=400)\norder_item_4 = OrderItem(id=4, order_id=3, product_id=2, quantity=10, item_total=150)\n\n# Test Data for Appointment\nappointment_1 = Appointment(id=1, pet_id=1, service_type='Grooming', date=datetime(2023, 4, 25, 10, 0))\napppointment_2 = Appointment(id=2, pet_id=2, service_type='Checkup', date=datetime(2023, 5, 10, 14, 0))\nappointment_3 = Appointment(id=3, pet_id=3, service_type='Grooming', date=datetime(2023, 6, 5, 10, 0))\nappointment_4 = Appointment(id=4, pet_id=4, service_type='Vaccination', date=datetime(2023, 5, 15, 15, 30))\n\n# Test Data for Service\nservice_1 = Service(id=1, name='Grooming', price=50)\nservice_2 = Service(id=2, name='Checkup', price=30)\nservice_3 = Service(id=3, name='Vaccination', price=40)\nservice_4 = Service(id=4, name='Training', price=60)\n\n# Test Data for PetService\npet_service_1 = PetService(id=1, pet_id=1, service_id=1, appointment_date=datetime(2023, 4, 25, 10, 0))\npet_service_2 = PetService(id=2, pet_id=2, service_id=2, appointment_date=datetime(2023, 5, 10, 14, 0))\npet_service_3 = PetService(id=3, pet_id=3, service_id=1, appointment_date=datetime(2023, 6, 5, 10, 0))\npet_service_4 = PetService(id=4, pet_id=4, service_id=3, appointment_date=datetime(2023, 5, 15, 15, 30))\n\n# Test Data for Supplier\nsupplier_1 = Supplier(id=1, name='Pet Supplies Inc.', contact_email='contact@petsupplies.com')\nsupplier_2 = Supplier(id=2, name='Animal Goods Co.', contact_email='info@animalgoods.com')\nsupplier_3 = Supplier(id=3, name='Best Pet Store', contact_email='sales@bestpetstore.com')\nsupplier_4 = Supplier(id=4, name='Pet World', contact_email='support@petworld.com')\n\n# Test Data for ProductSupply\nproduct_supply_1 = ProductSupply(id=1, product_id=1, supplier_id=1)\nproduct_supply_2 = ProductSupply(id=2, product_id=2, supplier_id=2)\nproduct_supply_3 = ProductSupply(id=3, product_id=3, supplier_id=3)\nproduct_supply_4 = ProductSupply(id=4, product_id=4, supplier_id=4)\n\n# Test Data for Employee\nemployee_1 = Employee(id=1, name='Peter Manning', position='Manager', total_hours_worked=160)\nemployee_2 = Employee(id=2, name='Susan Lee', position='Sales Associate', total_hours_worked=140)\nemployee_3 = Employee(id=3, name='Matt Clark', position='Groomer', total_hours_worked=180)\nemployee_4 = Employee(id=4, name='Laura Wood', position='Trainer', total_hours_worked=120)\n\n# Test Data for Shift\nshift_1 = Shift(id=1, employee_id=1, start_time=datetime(2023, 5, 1, 9, 0), end_time=datetime(2023, 5, 1, 17, 0))\nshift_2 = Shift(id=2, employee_id=2, start_time=datetime(2023, 5, 2, 9, 0), end_time=datetime(2023, 5, 2, 17, 0))\nshift_3 = Shift(id=3, employee_id=3, start_time=datetime(2023, 5, 3, 10, 0), end_time=datetime(2023, 5, 3, 18, 0))\nshift_4 = Shift(id=4, employee_id=4, start_time=datetime(2023, 5, 4, 11, 0), end_time=datetime(2023, 5, 4, 19, 0))\n",
+    "name": "PetShopDataModel"
+}

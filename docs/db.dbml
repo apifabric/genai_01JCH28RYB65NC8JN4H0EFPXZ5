@@ -1,0 +1,120 @@
+// Copy this text, paste to https://dbdiagram.io/d
+// Or, https://databasediagram.com/app
+// Or, view in VSCode with extension: "DBML Live Preview"
+
+Project DBML {
+  Note: '''
+Appointment: Table to store appointment details for pet services.
+Pet: Table to store pet details.
+Customer: Table to store customer details.
+Employee: Table to store employee details.
+Order: Table to store order details.
+OrderItem: Table to store details of order items.
+Product: Table to store product details.
+PetService: Intermediate table to link services provided to pets.
+Service: Table to represent various services offered for pets.
+ProductSupply: Intermediate table to link products with suppliers.
+Supplier: Table to store supplier details for products.
+Shift: Table to store shift details for employees.
+'''
+}
+
+Table Appointment {
+    id INTEGER [primary key]
+    pet_id INTEGER 
+    service_type VARCHAR 
+    date DATETIME 
+    }
+
+Table Pet {
+    id INTEGER [primary key]
+    name VARCHAR 
+    species VARCHAR 
+    breed VARCHAR 
+    date_of_birth DATE 
+    customer_id INTEGER 
+    }
+
+Table Customer {
+    id INTEGER [primary key]
+    name VARCHAR 
+    email VARCHAR 
+    phone VARCHAR 
+    total_pets INTEGER 
+    total_spent INTEGER 
+    }
+
+Table Employee {
+    id INTEGER [primary key]
+    name VARCHAR 
+    position VARCHAR 
+    total_hours_worked INTEGER 
+    }
+
+Table Order {
+    id INTEGER [primary key]
+    order_date DATETIME 
+    customer_id INTEGER 
+    total_amount INTEGER 
+    }
+
+Table OrderItem {
+    id INTEGER [primary key]
+    order_id INTEGER 
+    product_id INTEGER 
+    quantity INTEGER 
+    item_total INTEGER 
+    }
+
+Table Product {
+    id INTEGER [primary key]
+    name VARCHAR 
+    price INTEGER 
+    stock_quantity INTEGER 
+    }
+
+Table PetService {
+    id INTEGER [primary key]
+    pet_id INTEGER 
+    service_id INTEGER 
+    appointment_date DATETIME 
+    }
+
+Table Service {
+    id INTEGER [primary key]
+    name VARCHAR 
+    price INTEGER 
+    }
+
+Table ProductSupply {
+    id INTEGER [primary key]
+    product_id INTEGER 
+    supplier_id INTEGER 
+    }
+
+Table Supplier {
+    id INTEGER [primary key]
+    name VARCHAR 
+    contact_email VARCHAR 
+    }
+
+Table Shift {
+    id INTEGER [primary key]
+    employee_id INTEGER 
+    start_time DATETIME 
+    end_time DATETIME 
+    }
+
+
+
+// Relationships
+    Ref: Appointment.(pet_id) < Pet.(id)
+    Ref: Pet.(customer_id) < Customer.(id)
+    Ref: Order.(customer_id) < Customer.(id)
+    Ref: OrderItem.(order_id) < Order.(id)
+    Ref: OrderItem.(product_id) < Product.(id)
+    Ref: PetService.(pet_id) < Pet.(id)
+    Ref: PetService.(service_id) < Service.(id)
+    Ref: ProductSupply.(product_id) < Product.(id)
+    Ref: ProductSupply.(supplier_id) < Supplier.(id)
+    Ref: Shift.(employee_id) < Employee.(id)
